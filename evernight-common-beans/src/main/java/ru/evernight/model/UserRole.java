@@ -6,7 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum UserRole {
-
     WAITER("Официант"), MANAGER("Менеджер"), ADMIN("Администратор системы");
 
     private final String label;

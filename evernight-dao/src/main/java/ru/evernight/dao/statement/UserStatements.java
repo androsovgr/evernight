@@ -2,12 +2,18 @@ package ru.evernight.dao.statement;
 
 import org.apache.commons.lang3.StringUtils;
 import ru.evernight.exception.EvernightException;
+import ru.evernight.model.AccountStatus;
 import ru.evernight.model.User;
+import ru.evernight.model.User_;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.ejb.Stateless;
 import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.nio.charset.StandardCharsets;
 import java.security.spec.KeySpec;
 import java.util.Base64;
@@ -51,6 +57,24 @@ public class UserStatements extends CrudStatements<User> {
             throw new EvernightException("Ошибка при обращении в БД", e);
 
         }
+    }
+
+    public User login(String login, String password) throws EvernightException {
+        String passwordHash = passwordHash(login, password);
+        CriteriaBuilder cb = em
+                .getCriteriaBuilder();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        Root<User> ur = cq.from(User.class);
+        cq.where(cb.and(cb.equal(cb.upper(ur.get(User_.email)), login.toUpperCase()), cb.equal(ur.get(User_.passwordHash), passwordHash)));
+        TypedQuery<User> tq = em.createQuery(cq);
+        User founded = tq.getSingleResult();
+        if (founded == null) {
+            throw new EvernightException("Логин или пароль введен неправильно");
+        }
+        if (founded.getStatus() == AccountStatus.LOCKED) {
+            throw new EvernightException("Аккаунт заблокирован");
+        }
+        return founded;
     }
 
     private String passwordHash(String login, String password) throws EvernightException {

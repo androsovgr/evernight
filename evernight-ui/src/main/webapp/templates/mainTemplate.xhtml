@@ -4,7 +4,7 @@
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-    <title>Hytech clustering</title>
+    <title>Evernight CRM</title>
 </h:head>
 
 <h:body>
@@ -19,11 +19,12 @@
         </p:confirmDialog>
     </h:form>
     <h:form>
-        <p:panelGrid columns="2">
+        <p:panelGrid columns="3">
             <p:tabMenu>
                 <p:menuitem value="Пользователи"/>
             </p:tabMenu>
             <p:outputLabel value="Привет, #{loginBean.name()}"/>
+            <p:commandLink value="Выйти" actionListener="#{loginBean.logout}"/>
         </p:panelGrid>
     </h:form>
     <p:panel>
