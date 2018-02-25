@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<composite:interface>
+    <composite:attribute name="widgetVar" required="true"/>
+    <composite:attribute name="headerText" required="true"/>
+    <composite:attribute name="editModel" required="true" type="ru.evernight.model.User"/>
+    <composite:attribute name="buttonAction" required="true" method-signature="void action()"/>
+    <composite:attribute name="update" required="true"/>
+    <composite:attribute name="create" default="false"/>
+</composite:interface>
+
+<composite:implementation>
+    <p:dialog header="#{cc.attrs.headerText}" widgetVar="#{cc.attrs.widgetVar}" appendTo="@(body)" modal="true"
+              resizable="false">
+        <h:form id="dialogForm">
+            <o:importConstants type="ru.evernight.model.UserRole" var="ur"/>
+            <o:importConstants type="ru.evernight.model.AccountStatus" var="as"/>
+            <p:panelGrid columns="2" rendered="#{cc.attrs.editModel != null}">
+                <p:outputLabel value="Фамилия"/>
+                <p:inputText id="surname" value="#{cc.attrs.editModel.surname}" required="true" maxlength="45"/>
+                <p:outputLabel/>
+                <p:message for="surname"/>
+
+                <p:outputLabel value="Имя"/>
+                <p:inputText id="name" value="#{cc.attrs.editModel.name}" required="true" maxlength="45"/>
+                <p:outputLabel/>
+                <p:message for="name"/>
+
+                <p:outputLabel value="Отчество"/>
+                <p:inputText value="#{cc.attrs.editModel.middlename}"/>
+
+                <p:outputLabel value="Почта (логин)"/>
+                <p:inputText id="email" value="#{cc.attrs.editModel.email}" required="true" maxlength="45"/>
+                <p:outputLabel/>
+                <p:message for="email"/>
+
+                <p:outputLabel value="Введите пароль"/>
+                <p:password id="password" value="#{cc.attrs.editModel.passwordHash}" match="password2"
+                            required="#{cc.attrs.create}"/>
+                <p:outputLabel value="Повторите пароль"/>
+                <p:password id="password2" value="#{cc.attrs.editModel.passwordHash}" required="#{cc.attrs.create}"/>
+                <p:outputLabel/>
+                <p:message for="password"/>
+
+                <p:outputLabel value="Роль"/>
+                <p:selectOneMenu value="#{cc.attrs.editModel.role}">
+                    <f:selectItems value="#{ur}" var="role" itemLabel="#{role.label}"/>
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Статус"/>
+                <p:selectOneMenu value="#{cc.attrs.editModel.status}">
+                    <f:selectItems value="#{as}" var="status" itemLabel="#{status.label}"/>
+                </p:selectOneMenu>
+
+                <p:commandButton value="Ок" action="#{cc.attrs.buttonAction}" update="#{cc.attrs.update}, dialogForm"
+                                 oncomplete="hideDialogOnSuccess(args, '#{cc.attrs.widgetVar}')"/>
+                <p:commandLink value="Отмена" process="@none" onclick="PF('#{cc.attrs.widgetVar}').hide()"/>
+            </p:panelGrid>
+        </h:form>
+    </p:dialog>
+</composite:implementation>
+</html>

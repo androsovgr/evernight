@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "ent_user")
 @Data
-public class User implements Serializable {
+public class User implements Serializable, Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USR_PK")
@@ -23,5 +23,11 @@ public class User implements Serializable {
     private String name;
     @Column(name = "USR_MIDDLENAME")
     private String middlename;
+    @Column(name = "USR_ROLE")
+    @Enumerated
+    private UserRole role;
+    @Column(name = "USR_LOCKED")
+    @Enumerated
+    private AccountStatus status;
 
 }

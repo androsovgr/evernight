@@ -1,14 +1,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:en="http://java.sun.com/jsf/composite/components"
+      xmlns:f="http://java.sun.com/jsf/core">
 
 <h:body>
     <ui:composition template="/templates/mainTemplate.xhtml">
         <ui:define name="body">
-            <p:outputLabel value="users"/>
-            <h:form>
-                <p:commandButton value="Click me" actionListener="#{userList.click}"/>
+            <en:userCreate id="addUser" buttonAction="#{userList.create}" headerText="Создание пользователя"
+                           update=":userForm"
+                           widgetVar="addUser" editModel="#{userList.forCreate}" create="true"/>
+            <en:userCreate id="modifyUser" buttonAction="#{userList.modify}" headerText="Изменение пользователя"
+                           update=":userForm"
+                           widgetVar="modifyUser" editModel="#{userList.selected}"/>
+            <h:form id="userForm">
+                <p:dataTable var="user" value="#{userList}" paginator="true" rows="10"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             rowsPerPageTemplate="5,10,15" selectionMode="single" selection="#{userList.selected}"
+                             id="carTable" lazy="true">
+                    <f:facet name="header">
+                        <p:commandButton value="Добавить" actionListener="#{userList.prepareCreate}"
+                                         update=":addUser:dialogForm"
+                                         oncomplete="PF('addUser').show()" process="@this"/>
+                        <p:commandButton value="Изменить" actionListener="#{userList.prepareModify}"
+                                         update=":modifyUser:dialogForm"
+                                         oncomplete="PF('modifyUser').show()" process="@form"
+                                         rendered="#{userList.selected != null}"/>
+                        <p:commandButton value="Удалить" actionListener="#{userList.delete}"
+                                         process="@form" update="@form">
+                            <p:confirm header="Удаление пользователя" message="Вы уверены?" icon="ui-icon-alert"/>
+                        </p:commandButton>
+                    </f:facet>
+                    <p:column headerText="ФИО">
+                        <h:outputText value="#{user.surname} #{user.name} #{user.middlename}"/>
+                    </p:column>
+                    <p:column headerText="Логин">
+                        <h:outputText value="#{user.email}"/>
+                    </p:column>
+                    <p:column headerText="Роль">
+                        <h:outputText value="#{user.role.label}"/>
+                    </p:column>
+                    <p:column headerText="Статус">
+                        <h:outputText value="#{user.status.label}"/>
+                    </p:column>
+                </p:dataTable>
             </h:form>
         </ui:define>
     </ui:composition>

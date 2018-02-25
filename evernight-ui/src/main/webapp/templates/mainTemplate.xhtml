@@ -1,6 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
@@ -9,15 +8,20 @@
 </h:head>
 
 <h:body>
+    <h:outputScript library="js" name="evernight.js"/>
     <h:form id="growlForm">
         <p:growl id="growl" autoUpdate="true"/>
     </h:form>
+    <h:form id="confirmForm">
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Да" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+            <p:commandButton value="Отмена" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+        </p:confirmDialog>
+    </h:form>
     <h:form>
         <p:panelGrid columns="2">
-            <p:tabMenu activeIndex="#{param.page}">
-                <p:menuitem value="Пользователи">
-                    <f:param name="page" value="0"/>
-                </p:menuitem>
+            <p:tabMenu>
+                <p:menuitem value="Пользователи"/>
             </p:tabMenu>
             <p:outputLabel value="Привет, #{loginBean.name()}"/>
         </p:panelGrid>

@@ -11,7 +11,6 @@ import java.io.Serializable;
 
 @Named
 @SessionScoped
-@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class LoginBean implements Serializable {
     @Getter
     private User user;
