@@ -20,9 +20,7 @@
     </h:form>
     <h:form>
         <p:panelGrid columns="3">
-            <p:tabMenu>
-                <p:menuitem value="Пользователи"/>
-            </p:tabMenu>
+            <p:tabMenu model="#{navigationBean.model}" activeIndex="#{navigationBean.activeTabIndex}"/>
             <p:outputLabel value="Привет, #{loginBean.name()}"/>
             <p:commandLink value="Выйти" actionListener="#{loginBean.logout}"/>
         </p:panelGrid>
