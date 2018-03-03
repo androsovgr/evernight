@@ -5,6 +5,7 @@ import ru.evernight.model.UserRole;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
 
@@ -12,6 +13,8 @@ import java.util.*;
 @Named
 public class MenuItemStorageBean {
     private Map<UserRole, List<MenuItem>> access;
+    @Inject
+    private LoginBean lb;
 
     @PostConstruct
     private void postConstruct() {
@@ -30,5 +33,15 @@ public class MenuItemStorageBean {
 
     public List<MenuItem> menuItemsForRole(UserRole ur) {
         return access.get(ur);
+    }
+
+    public boolean urlAvailable(String url) {
+        List<MenuItem> availableItems = access.get(lb.getUser().getRole());
+        for (MenuItem mi : availableItems) {
+            if (url.endsWith("/" + mi.getPath())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

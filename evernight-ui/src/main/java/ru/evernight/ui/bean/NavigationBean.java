@@ -40,7 +40,6 @@ public class NavigationBean implements Serializable{
         for (MenuItem mi : items) {
             DefaultMenuItem dmi = new DefaultMenuItem(mi.getLabel());
             dmi.setUrl(baseUrl + "/pages/" + mi.getPath());
-            System.out.println(dmi.getUrl());
             if (currentUrl.endsWith("/" + mi.getPath())) {
                 activeTabIndex = i;
             }
