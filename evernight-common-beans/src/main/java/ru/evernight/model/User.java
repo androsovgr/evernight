@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "ent_user")
+@javax.persistence.Table(name = "ent_user")
 @Data
 public class User implements Serializable, Identifiable {
     @Id
@@ -29,5 +29,9 @@ public class User implements Serializable, Identifiable {
     @Column(name = "USR_LOCKED")
     @Enumerated
     private AccountStatus status;
+
+    public String name() {
+        return surname + " " + name;
+    }
 
 }

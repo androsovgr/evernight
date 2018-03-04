@@ -1,12 +1,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
 
 <h:body>
     <ui:composition template="/templates/mainTemplate.xhtml">
         <ui:define name="body">
-            <p:outputLabel value="Зал"/>
+            <h:form>
+                <p:dataTable value="#{hallBean.orders}" var="order" selectionMode="single"
+                             selection="#{hallBean.selected}" rowKey="#{order.id}">
+                    <f:facet name="header">
+                        <p:panelGrid columns="4">
+                            <p:commandButton value="Открыть стол"/>
+                            <p:commandButton value="Изменить заказ"/>
+                            <p:commandButton value="Закрыть стол"/>
+                            <p:commandLink value="Обновить" actionListener="#{hallBean.update}" update="@form"
+                                           process="@this"/>
+                        </p:panelGrid>
+                    </f:facet>
+                    <p:column headerText="Номер стола">
+                        <h:outputText value="#{order.order.table.label}"/>
+                    </p:column>
+                    <p:column headerText="Официант">
+                        <h:outputText value="#{order.order.waiter.name}"/>
+                    </p:column>
+                    <p:column headerText="Время открытия стола">
+                        <h:outputText value="#{order.order.openTime}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
         </ui:define>
     </ui:composition>
 </h:body>

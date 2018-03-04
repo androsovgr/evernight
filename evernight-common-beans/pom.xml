@@ -11,13 +11,20 @@
 
     <artifactId>evernight-common-beans</artifactId>
 
-   <dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
             <version>${version.hibernate}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${version.hibernate}</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -26,7 +33,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <compilerArguments>
-                        <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor,lombok.launch.AnnotationProcessorHider$AnnotationProcessor</processor>
+                        <processor>
+                            org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor,lombok.launch.AnnotationProcessorHider$AnnotationProcessor
+                        </processor>
                     </compilerArguments>
                 </configuration>
             </plugin>
