@@ -13,6 +13,9 @@
             <en:orderModify id="orderModify" update=":ordersForm" bean="#{hallBean.oeb}"
                             buttonAction="#{hallBean.modifyOrder}"
                             headerText="Изменение заказа" widgetVar="modifyOrder"/>
+            <en:orderModify id="orderClose" update=":ordersForm" bean="#{hallBean.oeb}"
+                            buttonAction="#{hallBean.modifyOrder}"
+                            headerText="Закрытие заказа" widgetVar="orderClose" mode="close"/>
             <h:form id="ordersForm">
                 <p:dataTable value="#{hallBean.orders}" var="order" selectionMode="single"
                              selection="#{hallBean.selected}" rowKey="#{order.id}">
@@ -25,7 +28,9 @@
                                              actionListener="#{hallBean.oeb.prepareModify(hallBean.selected.id)}"
                                              update=":orderModify:dialogForm" oncomplete="PF('modifyOrder').show()"
                                              process="@form"/>
-                            <p:commandButton value="Закрыть стол"/>
+                            <p:commandButton value="Закрыть стол" actionListener="#{hallBean.oeb.prepareClose(hallBean.selected.id)}"
+                                             update=":orderClose:dialogForm" oncomplete="PF('orderClose').show()"
+                                             process="@form"/>
                             <p:commandLink value="Обновить" actionListener="#{hallBean.update}" update="@form"
                                            process="@this"/>
                         </p:panelGrid>

@@ -39,6 +39,9 @@ public class HallBean implements Serializable {
 
     public void update() throws EvernightException {
         orders = os.openedOrders();
+        if (!orders.isEmpty() && !orders.contains(selected)) {
+            selected = orders.get(0);
+        }
     }
 
     public void createOrder() throws EvernightException {

@@ -34,4 +34,11 @@ public class Order implements Serializable, Identifiable {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
 
+    public double total() {
+        if (items == null || items.isEmpty()) {
+            return 0;
+        }
+        return items.stream().map(i -> i.getItem().getPrice()).reduce((d1, d2) -> d1 + d2).get();
+    }
+
 }

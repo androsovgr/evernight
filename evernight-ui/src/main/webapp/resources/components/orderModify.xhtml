@@ -9,7 +9,7 @@
     <composite:attribute name="headerText" required="true"/>
     <composite:attribute name="bean" required="true" type="ru.evernight.ui.bean.edit.OrderEditBean"/>
     <composite:attribute name="buttonAction" required="true" method-signature="void action()"/>
-    <composite:attribute name="modify" default="true"/>
+    <composite:attribute name="mode" default="modify"/>
     <composite:attribute name="update" required="true"/>
     <composite:attribute name="create" default="false"/>
 </composite:interface>
@@ -21,8 +21,9 @@
             <p:panel rendered="#{cc.attrs.bean.order!=null}">
                 <p:panelGrid columns="2" id="mainPanel">
                     <p:outputLabel value="Номер стола"/>
-                    <p:selectOneMenu value="#{cc.attrs.bean.order.table}" required="true">
-                        <f:selectItem itemLabel="Выберите стол" noSelectionOption="true" itemValue="#{null}"/>
+                    <p:selectOneMenu value="#{cc.attrs.bean.order.table}" required="true"
+                                     disabled="#{cc.attrs.mode!='modify'}">
+                        <f:selectItem itemLabel="Выберите стол" noSelectionOption="true"/>
                         <f:selectItems value="#{cc.attrs.bean.freeTables}" var="tbl" itemLabel="#{tbl.label}"
                                        itemValue="#{tbl}"/>
                     </p:selectOneMenu>
@@ -32,12 +33,17 @@
 
                     <p:outputLabel value="Время открытия:"/>
                     <p:calendar value="#{cc.attrs.bean.order.openTime}" timeOnly="true" required="true"
-                                pattern="HH:mm"/>
+                                pattern="HH:mm" disabled="#{cc.attrs.mode!='modify'}"
+                                showOn="button"/>
+
+                    <p:outputLabel value="Время закрытия:" rendered="#{cc.attrs.mode=='close'}"/>
+                    <p:calendar value="#{cc.attrs.bean.order.closeTime}" timeOnly="true" required="true"
+                                pattern="HH:mm" rendered="#{cc.attrs.mode=='close'}" showOn="button"/>
 
                     <p:outputLabel value="Комментарий"/>
                     <p:inputTextarea value="#{cc.attrs.bean.order.comment}"/>
                 </p:panelGrid>
-                <p:panel header="Добавить в заказ">
+                <p:panel header="Добавить в заказ" rendered="#{cc.attrs.mode=='modify'}">
                     <p:autoComplete value="#{cc.attrs.bean.selectedItem}" dropdown="true"
                                     completeMethod="#{cc.attrs.bean.findItems}" var="itm" itemLabel="#{itm.label}"
                                     itemValue="#{itm}"
@@ -46,6 +52,12 @@
                                      actionListener="#{cc.attrs.bean.addItem}"/>
                 </p:panel>
                 <p:dataTable id="itemTable" value="#{cc.attrs.bean.order.items}" var="itm">
+                    <f:facet name="footer">
+                        <p:panelGrid columns="4">
+                            <p:outputLabel value="Счет: "/>
+                            <p:outputLabel value="#{cc.attrs.bean.order.total()}"/>
+                        </p:panelGrid>
+                    </f:facet>
                     <p:column headerText="Товар">
                         <h:outputText value="#{itm.item.label}"/>
                     </p:column>
