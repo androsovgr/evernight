@@ -2,9 +2,10 @@ package ru.evernight.ui.bean;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.evernight.dao.statement.OrderStatements;
+import ru.evernight.dao.statement.aggregated.AggregatedOrderStatements;
 import ru.evernight.exception.EvernightException;
 import ru.evernight.model.aggregative.AggregatedOrder;
+import ru.evernight.ui.bean.edit.OrderEditBean;
 
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -15,14 +16,18 @@ import java.util.List;
 
 @ViewScoped
 @Named
-public class HallBean implements Serializable{
+public class HallBean implements Serializable {
     @Inject
-    private OrderStatements os;
+    private AggregatedOrderStatements os;
     @Getter
     private List<AggregatedOrder> orders;
     @Getter
     @Setter
     private AggregatedOrder selected;
+
+    @Inject
+    @Getter
+    private OrderEditBean oeb;
 
     @PostConstruct
     private void postConstruct() throws EvernightException {
@@ -34,5 +39,10 @@ public class HallBean implements Serializable{
 
     public void update() throws EvernightException {
         orders = os.openedOrders();
+    }
+
+    public void createOrder() throws EvernightException {
+        oeb.createOrder();
+        update();
     }
 }

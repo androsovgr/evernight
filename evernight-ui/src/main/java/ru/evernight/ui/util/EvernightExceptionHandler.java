@@ -1,29 +1,22 @@
 package ru.evernight.ui.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.omnifaces.exceptionhandler.FullAjaxExceptionHandler;
 import ru.evernight.exception.EvernightException;
 
-import javax.el.ELException;
 import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExceptionHandler;
-import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
 import java.util.Iterator;
 
 @Slf4j
-public class EvernightExceptionHandler extends ExceptionHandlerWrapper {
-    private ExceptionHandler wrapped;
+public class EvernightExceptionHandler extends FullAjaxExceptionHandler {
 
     EvernightExceptionHandler(ExceptionHandler exception) {
-        this.wrapped = exception;
-    }
-
-    @Override
-    public ExceptionHandler getWrapped() {
-        return wrapped;
+        super(exception);
     }
 
     @Override
@@ -38,8 +31,8 @@ public class EvernightExceptionHandler extends ExceptionHandlerWrapper {
             // get the exception from context
             Throwable t = context.getException();
 
-            EvernightException realCause = unwrap(t);
-            if (realCause != null) {
+            Throwable realCause = findExceptionRootCause(FacesContext.getCurrentInstance(), t);
+            if (realCause instanceof EvernightException) {
                 //here you do what ever you want with exception
                 try {
                     FacesContext ctx = FacesContext.getCurrentInstance();
@@ -52,17 +45,7 @@ public class EvernightExceptionHandler extends ExceptionHandlerWrapper {
                 }
             }
         }
-        getWrapped().handle();
+        super.handle();
     }
 
-    private EvernightException unwrap(Throwable th) {
-        while (th instanceof ELException && th.getCause() != null) {
-            th = th.getCause();
-        }
-        if (th instanceof EvernightException) {
-            return (EvernightException) th;
-        } else {
-            return null;
-        }
-    }
 }

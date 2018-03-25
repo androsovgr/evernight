@@ -1,6 +1,7 @@
 package ru.evernight.dao.statement;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.evernight.exception.EvernightException;
 import ru.evernight.model.Identifiable;
 
@@ -13,8 +14,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 public abstract class CrudStatements<T extends Identifiable> {
+
+    public CrudStatements() {
+        modelClass = null;
+    }
 
     private final Class<T> modelClass;
     @PersistenceContext(unitName = "evernight")

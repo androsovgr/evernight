@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>6.0</version>
+            <version>${version.primefaces}</version>
         </dependency>
 
         <dependency>

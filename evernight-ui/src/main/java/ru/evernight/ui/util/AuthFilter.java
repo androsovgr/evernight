@@ -28,7 +28,6 @@ public class AuthFilter implements Filter {
             HttpSession ses = reqt.getSession(true);
 
             String reqURI = reqt.getRequestURI();
-            System.out.println("requri: " + reqURI);
             if (reqURI.equals(reqt.getContextPath()+"/")) {
                 resp.sendRedirect(reqt.getContextPath() + "/pages/login.jsf");
             } else if (!reqURI.contains("/pages/")) {

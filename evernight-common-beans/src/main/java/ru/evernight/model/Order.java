@@ -1,14 +1,21 @@
 package ru.evernight.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @javax.persistence.Table(name = "ent_order")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Order implements Serializable, Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +33,7 @@ public class Order implements Serializable, Identifiable {
     private Date closeTime;
     @Column(name = "ORD_COMMENT")
     private String comment;
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> items;
 
 }

@@ -1,17 +1,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:en="http://java.sun.com/jsf/composite/components">
 
 <h:body>
     <ui:composition template="/templates/mainTemplate.xhtml">
         <ui:define name="body">
-            <h:form>
+            <en:orderModify id="orderCreate" update=":ordersForm" bean="#{hallBean.oeb}"
+                            buttonAction="#{hallBean.createOrder}"
+                            headerText="Открытие стола" widgetVar="openTable"/>
+            <h:form id="ordersForm">
                 <p:dataTable value="#{hallBean.orders}" var="order" selectionMode="single"
                              selection="#{hallBean.selected}" rowKey="#{order.id}">
                     <f:facet name="header">
                         <p:panelGrid columns="4">
-                            <p:commandButton value="Открыть стол"/>
+                            <p:commandButton value="Открыть стол" actionListener="#{hallBean.oeb.prepareCreate}"
+                                             update=":orderCreate:dialogForm" oncomplete="PF('openTable').show()" process="@this"/>
                             <p:commandButton value="Изменить заказ"/>
                             <p:commandButton value="Закрыть стол"/>
                             <p:commandLink value="Обновить" actionListener="#{hallBean.update}" update="@form"
