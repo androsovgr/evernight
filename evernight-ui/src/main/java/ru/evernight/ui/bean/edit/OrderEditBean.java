@@ -45,7 +45,13 @@ public class OrderEditBean implements Serializable {
         freeTables = ts.freeTables();
         availableItems = is.activeItems();
         order = Order.builder().openTime(new Date()).table(freeTables.isEmpty() ? null : freeTables.get(0)).waiter(lb.getUser()).items(new ArrayList<>()).build();
-        log.info("Order: {}", order);
+    }
+
+    public void prepareModify(long id) throws EvernightException {
+        order = os.byIdInitItems(id);
+        freeTables = ts.freeTables();
+        freeTables.add(order.getTable());
+        availableItems = is.activeItems();
     }
 
     public void remove(OrderItem oi) {
@@ -66,4 +72,7 @@ public class OrderEditBean implements Serializable {
         os.create(order);
     }
 
+    public void modifyOrder() throws EvernightException {
+        os.update(order);
+    }
 }

@@ -9,15 +9,22 @@
         <ui:define name="body">
             <en:orderModify id="orderCreate" update=":ordersForm" bean="#{hallBean.oeb}"
                             buttonAction="#{hallBean.createOrder}"
-                            headerText="Открытие стола" widgetVar="openTable"/>
+                            headerText="Открытие стола" widgetVar="openOrder"/>
+            <en:orderModify id="orderModify" update=":ordersForm" bean="#{hallBean.oeb}"
+                            buttonAction="#{hallBean.modifyOrder}"
+                            headerText="Изменение заказа" widgetVar="modifyOrder"/>
             <h:form id="ordersForm">
                 <p:dataTable value="#{hallBean.orders}" var="order" selectionMode="single"
                              selection="#{hallBean.selected}" rowKey="#{order.id}">
                     <f:facet name="header">
                         <p:panelGrid columns="4">
                             <p:commandButton value="Открыть стол" actionListener="#{hallBean.oeb.prepareCreate}"
-                                             update=":orderCreate:dialogForm" oncomplete="PF('openTable').show()" process="@this"/>
-                            <p:commandButton value="Изменить заказ"/>
+                                             update=":orderCreate:dialogForm" oncomplete="PF('openOrder').show()"
+                                             process="@this"/>
+                            <p:commandButton value="Изменить заказ"
+                                             actionListener="#{hallBean.oeb.prepareModify(hallBean.selected.id)}"
+                                             update=":orderModify:dialogForm" oncomplete="PF('modifyOrder').show()"
+                                             process="@form"/>
                             <p:commandButton value="Закрыть стол"/>
                             <p:commandLink value="Обновить" actionListener="#{hallBean.update}" update="@form"
                                            process="@this"/>

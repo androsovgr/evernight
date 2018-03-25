@@ -45,4 +45,9 @@ public class HallBean implements Serializable {
         oeb.createOrder();
         update();
     }
+
+    public void modifyOrder() throws EvernightException {
+        oeb.modifyOrder();
+        update();
+    }
 }

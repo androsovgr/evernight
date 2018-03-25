@@ -17,18 +17,4 @@ public class TableConverter extends BaseDbConverter<Table> {
     @Inject
     @Getter
     private TableStatements statements;
-    @Inject
-    private HallBean hb;
-
-    @Override
-    public Object getAsObject(FacesContext context, UIComponent component, String value) throws ConverterException {
-        Object result = super.getAsObject(context, component, value);
-        List<Table> ft = hb.getOeb().getFreeTables();
-        System.out.println(ft);
-        System.out.println(ft.contains(result));
-        System.out.println(result);
-        System.out.println(ft.get(0).equals(result));
-        System.out.println(ft.get(0).getClass() + " - " + result.getClass());
-        return result;
-    }
 }
