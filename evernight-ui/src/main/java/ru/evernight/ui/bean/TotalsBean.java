@@ -2,6 +2,7 @@ package ru.evernight.ui.bean;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.time.DateUtils;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import ru.evernight.dao.statement.TotalsStatements;
@@ -48,10 +49,12 @@ public class TotalsBean implements Serializable {
     }
 
     public void clearFilters() {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.MONTH, -1);
-        from = c.getTime();
-        to = new Date();
+        Calendar cFrom = Calendar.getInstance();
+        cFrom.add(Calendar.MONTH, -1);
+        from = cFrom.getTime();
+        Calendar cTo = DateUtils.round(Calendar.getInstance(), Calendar.DATE);
+        cTo.add(Calendar.DATE, 1);
+        to = cTo.getTime();
     }
 
     private TreeNode convert(CategoryTotal totals, TreeNode parent) {

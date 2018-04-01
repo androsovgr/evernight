@@ -24,7 +24,7 @@
                 </h:form>
                 <h:form id="tableForm">
                     <p:blockUI block="table" trigger=":searchForm:searchButton, table"/>
-                    <p:treeTable value="#{totalsBean.root}" var="total" id="table">
+                    <p:treeTable value="#{totalsBean.root}" var="total" id="table" >
                         <f:facet name="footer">
                             <p:outputLabel value="Всего: #{totalsBean.total} Р"/>
                         </f:facet>
@@ -34,7 +34,7 @@
                         <p:column headerText="Штук">
                             <h:outputText value="#{total.totalCount}"/>
                         </p:column>
-                        <p:column>
+                        <p:column headerText="Приход по категории">
                             <h:outputText value="#{total.totalPrice}"/>
                         </p:column>
                     </p:treeTable>

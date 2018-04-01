@@ -29,7 +29,8 @@ public class TotalsStatements {
             Query q = em.createNativeQuery("select i.ITEM_LABEL,i.ITEM_CLAS_PK, count(1) as totalCount, sum(i.ITEM_PRICE) as totalPrice from ent_item i " +
                     "join ent_order_item oi on i.ITEM_PK=oi.ORIT_ITEM_PK " +
                     "join ent_order o on oi.ORIT_ORD_PK=o.ORD_PK " +
-                    "where o.ORD_CLOSED>?1 and o.ORD_CLOSED<?2");
+                    "where o.ORD_CLOSED>?1 and o.ORD_CLOSED<?2 " +
+                    "group by i.ITEM_PK");
             List<Object[]> productTotalsObjects = q.setParameter(1, from).setParameter(2, to).getResultList();
             Map<Long, List<ProductTotal>> productTotals;
             if (productTotalsObjects.get(0)[0] == null) {
