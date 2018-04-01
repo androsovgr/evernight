@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+    <ui:composition template="/templates/mainTemplate.xhtml">
+        <ui:define name="body">
+            <p:panelGrid columns="2">
+                <h:form id="searchForm">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel value="От"/>
+                        <p:calendar value="#{totalsBean.from}" pattern="dd/MM/yyyy HH:mm" showOn="button"
+                                    required="true"/>
+
+                        <p:outputLabel value="До"/>
+                        <p:calendar value="#{totalsBean.to}" pattern="dd/MM/yyyy HH:mm" showOn="button"
+                                    required="true"/>
+
+                        <p:commandLink value="За последний месяц" actionListener="#{totalsBean.clearFilters}" update="@form"/>
+                        <p:commandButton id="searchButton" value="Искать" actionListener="#{totalsBean.refreshTotals}"
+                                         update="tableForm"/>
+                    </p:panelGrid>
+                </h:form>
+                <h:form id="tableForm">
+                    <p:blockUI block="table" trigger=":searchForm:searchButton, table"/>
+                    <p:treeTable value="#{totalsBean.root}" var="total" id="table">
+                        <f:facet name="footer">
+                            <p:outputLabel value="Всего: #{totalsBean.total} Р"/>
+                        </f:facet>
+                        <p:column headerText="Категория">
+                            <h:outputText value="#{total.label}"/>
+                        </p:column>
+                        <p:column headerText="Штук">
+                            <h:outputText value="#{total.totalCount}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{total.totalPrice}"/>
+                        </p:column>
+                    </p:treeTable>
+                </h:form>
+            </p:panelGrid>
+        </ui:define>
+    </ui:composition>
+</h:body>
+
+</html>
