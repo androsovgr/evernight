@@ -17,7 +17,7 @@ import java.util.List;
 
 @ViewScoped
 @Named
-public class NavigationBean implements Serializable{
+public class NavigationBean implements Serializable {
     @Inject
     private MenuItemStorageBean misb;
     @Inject
@@ -39,7 +39,7 @@ public class NavigationBean implements Serializable{
         int i = 0;
         for (MenuItem mi : items) {
             DefaultMenuItem dmi = new DefaultMenuItem(mi.getLabel());
-            dmi.setUrl(baseUrl + "/pages/" + mi.getPath());
+            dmi.setUrl("/pages/" + mi.getPath());
             if (currentUrl.endsWith("/" + mi.getPath())) {
                 activeTabIndex = i;
             }
