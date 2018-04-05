@@ -2,8 +2,8 @@ package ru.evernight.ui.filters;
 
 import ru.evernight.dao.statement.filter.DbFilter;
 
-public interface UiFIlter {
+public interface UiFIlter<T> {
     void clear();
 
-    DbFilter covert();
+    DbFilter<T> covert();
 }

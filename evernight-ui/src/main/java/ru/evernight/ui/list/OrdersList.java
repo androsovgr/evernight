@@ -1,66 +1,39 @@
 package ru.evernight.ui.list;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.primefaces.model.LazyDataModel;
-import org.primefaces.model.SortOrder;
-import ru.evernight.dao.statement.ListAndCount;
 import ru.evernight.dao.statement.aggregated.AggregatedOrderStatements;
-import ru.evernight.dao.statement.filter.DbFilter;
 import ru.evernight.exception.EvernightException;
+import ru.evernight.model.Order_;
 import ru.evernight.model.aggregative.AggregatedOrder;
+import ru.evernight.model.aggregative.AggregatedOrder_;
+import ru.evernight.ui.filters.DateRangeUiFilter;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
-import java.util.Map;
+import java.util.Calendar;
+import java.util.Date;
+
+import static org.apache.commons.lang3.time.DateUtils.*;
 
 @Slf4j
 @ViewScoped
 @Named
-public class OrdersList extends LazyDataModel<AggregatedOrder> {
+public class OrdersList extends ExtendedLazyDataModel<AggregatedOrder> {
     @Inject
-    private AggregatedOrderStatements aos;
+    @Getter(AccessLevel.PROTECTED)
+    private AggregatedOrderStatements mainStatements;
 
     @Getter
-    @Setter
-    private AggregatedOrder selected;
+    private final DateRangeUiFilter<AggregatedOrder> orderClosedDateFilter;
 
-    @SneakyThrows(EvernightException.class)
-    @Override
-    public List<AggregatedOrder> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map filters) {
-        ListAndCount<AggregatedOrder> result = aos.lazyList(0, 10, filters());
-        setRowCount((int) result.getTotalCount());
-        if (!result.getElements().contains(selected) && !result.getElements().isEmpty()) {
-            selected = result.getElements().get(0);
-        }
-        return result.getElements();
+    public OrdersList() {
+        Date todayMidnight = addSeconds(ceiling(new Date(), Calendar.DATE), -1);
+        Date monthAgo = addMonths(truncate(new Date(), Calendar.DATE), -1);
+        this.orderClosedDateFilter = new DateRangeUiFilter<>(monthAgo, todayMidnight, root -> root.get(AggregatedOrder_.order).get(Order_.closeTime));
     }
 
-    protected List<DbFilter<AggregatedOrder>> filters() {
-
-    }
-
-
-    public void modify() throws EvernightException {
-        aos.update(selected);
-    }
-
-    public void delete() throws EvernightException {
-        aos.delete(selected.getId());
-    }
-
-    @Override
-    public Object getRowKey(AggregatedOrder object) {
-        return object.getId();
-    }
-
-    @SneakyThrows(EvernightException.class)
-    @Override
-    public AggregatedOrder getRowData(String rowKey) {
-        return aos.byId(Long.parseLong(rowKey));
-    }
 }
