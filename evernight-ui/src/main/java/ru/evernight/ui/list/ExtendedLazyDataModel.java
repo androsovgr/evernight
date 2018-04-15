@@ -56,6 +56,10 @@ public abstract class ExtendedLazyDataModel<T extends Identifiable> extends Lazy
 
     protected abstract CrudStatements<T> getMainStatements();
 
+    public void create() throws EvernightException {
+        getMainStatements().create(forCreate);
+    }
+
     public void modify() throws EvernightException {
         getMainStatements().update(selected);
     }
