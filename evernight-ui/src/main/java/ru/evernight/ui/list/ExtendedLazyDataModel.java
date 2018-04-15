@@ -34,7 +34,7 @@ public abstract class ExtendedLazyDataModel<T extends Identifiable> extends Lazy
                 .filter(m -> m.getParameterCount() == 0)
                 .map(m -> UiFIlter.class.cast(invoke(m, this)).covert())
                 .collect(Collectors.toList());
-        return  (List<DbFilter<T>>) (List) l;
+        return (List<DbFilter<T>>) (List) l;
     }
 
 
@@ -56,8 +56,16 @@ public abstract class ExtendedLazyDataModel<T extends Identifiable> extends Lazy
 
     protected abstract CrudStatements<T> getMainStatements();
 
+    public void prepareCreate() throws EvernightException {
+
+    }
+
     public void create() throws EvernightException {
         getMainStatements().create(forCreate);
+    }
+
+    public void prepareModify() throws EvernightException {
+
     }
 
     public void modify() throws EvernightException {

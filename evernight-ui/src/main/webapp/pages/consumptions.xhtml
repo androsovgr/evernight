@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:en="http://java.sun.com/jsf/composite/components"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:filter="http://java.sun.com/jsf/composite/components/filter">
+
+<h:body>
+    <ui:composition template="/templates/mainTemplate.xhtml">
+        <ui:define name="body">
+            <en:consumptionModify id="consumptionCreate" value="#{consumptionList.forCreate}" update=":userForm"
+                                  headerText="Заведение расхода"
+                                  widgetVar="consumptionCreate" buttonAction="#{consumptionList.create}"/>
+            <en:consumptionModify id="consumptionModify" value="#{consumptionList.forCreate}" update=":userForm"
+                                  headerText="Изменение расхода"
+                                  widgetVar="consumptionModify" buttonAction="#{consumptionList.modify}"/>
+            <h:form id="filterForm">
+                <filter:dateRangeFilter filter="#{consumptionList.dateFilter}"/>
+                <p:commandButton value="Применить" process="@form" update=":tableForm"/>
+                <p:commandLink value="Сбросить" actionListener="#{consumptionList.dateFilter.clear}"
+                               update="@form,:tableForm"/>
+            </h:form>
+            <h:form id="tableForm">
+                <p:dataTable var="cons" value="#{consumptionList}" paginator="true" rows="10"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             rowsPerPageTemplate="5,10,15" selectionMode="single"
+                             selection="#{consumptionList.selected}"
+                             id="table" lazy="true">
+                    <f:facet name="header">
+                        <p:commandButton value="Добавить" actionListener="#{consumptionList.prepareCreate}"
+                                         update=":consumptionCreate:dialogForm"
+                                         oncomplete="PF('consumptionCreate').show()" process="@this"/>
+                        <p:commandButton value="Изменить" actionListener="#{consumptionList.prepareModify}"
+                                         update=":consumptionModify:dialogForm"
+                                         oncomplete="PF('consumptionModify').show()" process="@form"
+                                         disabled="#{consumptionList.selected == null}"/>
+                        <p:commandButton value="Удалить" actionListener="#{consumptionList.delete}"
+                                         process="@form" update="@form">
+                            <p:confirm header="Удаление расхода" message="Вы уверены?" icon="ui-icon-alert"/>
+                        </p:commandButton>
+                    </f:facet>
+                    <p:column headerText="Расход">
+                        <h:outputText value="#{cons.shortInfo}"/>
+                    </p:column>
+                    <p:column headerText="Дата">
+                        <h:outputText value="#{cons.date}"/>
+                    </p:column>
+                    <p:column headerText="Величина">
+                        <h:outputText value="#{cons.money}"/>
+                    </p:column>
+                    <p:column headerText="Тип">
+                        <h:outputText value="#{cons.type.label}"/>
+                    </p:column>
+                    <p:column headerText="Подробное описание">
+                        <h:outputText value="#{cons.longInfo}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+
+</html>

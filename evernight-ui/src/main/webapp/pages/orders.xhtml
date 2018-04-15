@@ -2,16 +2,13 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
->
+      xmlns:filter="http://evernight.ru/filter">
 
 <h:body>
     <ui:composition template="/templates/mainTemplate.xhtml">
         <ui:define name="body">
             <h:form id="filterForm">
-                <p:outputLabel value="От:"/>
-                <p:calendar value="#{ordersList.orderClosedDateFilter.dateFrom}" pattern="dd/MM/yyyy HH:mm"/>
-                <p:outputLabel value="До:"/>
-                <p:calendar value="#{ordersList.orderClosedDateFilter.dateTo}" pattern="dd/MM/yyyy HH:mm"/>
+                <filter:dateRangeFilter filter="#{ordersList.orderClosedDateFilter}"/>
                 <p:commandButton value="Применить" process="@form" update=":ordersForm"/>
                 <p:commandLink value="Сбросить" actionListener="#{ordersList.orderClosedDateFilter.clear}"
                                update="@form,:ordersForm"/>

@@ -1,0 +1,4 @@
+<facelet-taglib version="2.0">
+    <namespace>http://evernight.ru/filter</namespace>
+    <composite-library-name>components/filter</composite-library-name>
+</facelet-taglib>

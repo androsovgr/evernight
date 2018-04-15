@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<composite:interface>
+    <composite:attribute name="widgetVar" required="true"/>
+    <composite:attribute name="headerText" required="true"/>
+    <composite:attribute name="value" required="true" type="ru.evernight.model.Consumption"/>
+    <composite:attribute name="buttonAction" required="true" method-signature="void action()"/>
+    <composite:attribute name="update" required="true"/>
+</composite:interface>
+
+<composite:implementation>
+    <p:dialog header="#{cc.attrs.headerText}" widgetVar="#{cc.attrs.widgetVar}" appendTo="@(body)" modal="true"
+              resizable="false">
+        <h:form id="dialogForm">
+            <o:importConstants type="ru.evernight.model.Consumption$ConsumptionType" var="ct"/>
+            <p:panel rendered="#{cc.attrs.value!=null}">
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Назначение расхода"/>
+                    <p:inputText value="#{cc.attrs.value.shortInfo}" required="true"/>
+
+                    <p:outputLabel value="Дата"/>
+                    <p:calendar value="#{cc.attrs.value.date}" required="true"/>
+
+                    <p:outputLabel value="Величина"/>
+                    <p:inputText value="#{cc.attrs.value.money}" required="true"/>
+
+                    <p:inputText value="Тип"/>
+                    <p:selectOneMenu value="#{cc.attrs.value.type}" required="true">
+                        <f:selectItems value="#{ct}" var="type" itemLabel="#{type.label}"/>
+                    </p:selectOneMenu>
+
+                    <p:inputText value="Расширенное описание"/>
+                    <p:inputTextarea value="#{cc.attrs.value.longInfo}" maxlength="1000"/>
+                </p:panelGrid>
+            </p:panel>
+            <p:panelGrid columns="2">
+                <p:commandButton value="Фиксация" action="#{cc.attrs.buttonAction}"
+                                 update="#{cc.attrs.update}, dialogForm"
+                                 oncomplete="hideDialogOnSuccess(args, '#{cc.attrs.widgetVar}')"
+                                 process="@this, mainPanel"/>
+                <p:commandLink value="Отмена" process="@none" onclick="PF('#{cc.attrs.widgetVar}').hide()"/>
+            </p:panelGrid>
+        </h:form>
+    </p:dialog>
+</composite:implementation>
+</html>

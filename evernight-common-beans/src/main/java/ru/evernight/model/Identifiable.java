@@ -1,5 +1,7 @@
 package ru.evernight.model;
 
-public interface Identifiable {
+import java.io.Serializable;
+
+public interface Identifiable extends Serializable {
     long getId();
 }

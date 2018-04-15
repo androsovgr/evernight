@@ -1,0 +1,16 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+    <composite:attribute name="filter" required="true" type="ru.evernight.ui.filters.DateRangeUiFilter"/>
+    <composite:attribute name="pattern" default="dd/MM/yyyy HH:mm"/>
+</composite:interface>
+
+<composite:implementation>
+    <p:outputLabel value="От:"/>
+    <p:calendar value="#{cc.attrs.filter.dateFrom}" pattern="#{cc.attrs.pattern}"/>
+    <p:outputLabel value="До:"/>
+    <p:calendar value="#{cc.attrs.filter.dateTo}" pattern="#{cc.attrs.pattern}"/>
+</composite:implementation>
+</html>

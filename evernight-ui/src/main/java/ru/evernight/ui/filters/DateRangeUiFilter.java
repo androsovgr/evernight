@@ -7,7 +7,11 @@ import ru.evernight.dao.statement.filter.DbFilter;
 import ru.evernight.ui.func.SerializableFunction;
 
 import javax.persistence.criteria.Path;
+import java.util.Calendar;
 import java.util.Date;
+
+import static org.apache.commons.lang3.time.DateUtils.addMonths;
+import static org.apache.commons.lang3.time.DateUtils.ceiling;
 
 public class DateRangeUiFilter<T> implements UiFIlter {
     @Getter
@@ -39,5 +43,11 @@ public class DateRangeUiFilter<T> implements UiFIlter {
     @Override
     public DbFilter covert() {
         return new DateRangeFilter<>(dateFrom, dateTo, path);
+    }
+
+    public static <T> DateRangeUiFilter<T> lastMounth(SerializableFunction<Path<T>, Path<Date>> path) {
+        Date todayMidnight = ceiling(new Date(), Calendar.DATE);
+        Date monthAgo = addMonths(ceiling(new Date(), Calendar.DATE), -1);
+        return new DateRangeUiFilter<>(monthAgo, todayMidnight, path);
     }
 }

@@ -18,13 +18,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("EjbInterceptorInspection")
 @Slf4j
 @RequiredArgsConstructor
 public abstract class CrudStatements<T extends Identifiable> {
-
-    public CrudStatements() {
-        modelClass = null;
-    }
 
     private final Class<T> modelClass;
     @PersistenceContext(unitName = "evernight")

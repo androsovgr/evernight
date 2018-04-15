@@ -23,6 +23,11 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <context-param>
+        <param-name>facelets.LIBRARIES</param-name>
+        <param-value>/WEB-INF/filter.taglib.xml</param-value>
+    </context-param>
+
     <!-- Faces Servlet Mapping -->
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
