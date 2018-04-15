@@ -31,8 +31,8 @@ public class OrdersList extends ExtendedLazyDataModel<AggregatedOrder> {
     private final DateRangeUiFilter<AggregatedOrder> orderClosedDateFilter;
 
     public OrdersList() {
-        Date todayMidnight = addSeconds(ceiling(new Date(), Calendar.DATE), -1);
-        Date monthAgo = addMonths(truncate(new Date(), Calendar.DATE), -1);
+        Date todayMidnight = ceiling(new Date(), Calendar.DATE);
+        Date monthAgo = addMonths(ceiling(new Date(), Calendar.DATE), -1);
         this.orderClosedDateFilter = new DateRangeUiFilter<>(monthAgo, todayMidnight, root -> root.get(AggregatedOrder_.order).get(Order_.closeTime));
     }
 

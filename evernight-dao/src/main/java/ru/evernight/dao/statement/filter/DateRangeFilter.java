@@ -1,8 +1,6 @@
 package ru.evernight.dao.statement.filter;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
@@ -12,15 +10,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
-@AllArgsConstructor
+@Data
 public class DateRangeFilter<T> implements DbFilter<T> {
-    @Getter
-    @Setter
-    private Date from;
-    @Getter
-    @Setter
-    private Date to;
-    private Function<Path<T>, Path<Date>> path;
+    private final Date from;
+    private final Date to;
+    private final Function<Path<T>, Path<Date>> path;
 
     @Override
     public Predicate apply(CriteriaBuilder cb, Path<T> rootPath) {

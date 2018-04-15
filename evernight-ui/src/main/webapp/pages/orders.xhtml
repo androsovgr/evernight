@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+>
+
+<h:body>
+    <ui:composition template="/templates/mainTemplate.xhtml">
+        <ui:define name="body">
+            <h:form id="filterForm">
+                <p:outputLabel value="От:"/>
+                <p:calendar value="#{ordersList.orderClosedDateFilter.dateFrom}" pattern="dd/MM/yyyy HH:mm"/>
+                <p:outputLabel value="До:"/>
+                <p:calendar value="#{ordersList.orderClosedDateFilter.dateTo}" pattern="dd/MM/yyyy HH:mm"/>
+                <p:commandButton value="Применить" process="@form" update=":ordersForm"/>
+                <p:commandLink value="Сбросить" actionListener="#{ordersList.orderClosedDateFilter.clear}"
+                               update="@form,:ordersForm"/>
+            </h:form>
+            <h:form id="ordersForm">
+                <p:dataTable value="#{ordersList}" var="order" paginator="true" rows="10"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             rowsPerPageTemplate="5,10,15"
+                             id="carTable" lazy="true">
+                    <f:facet name="header">
+                        <p:panelGrid columns="4">
+                            <p:commandLink value="Обновить" actionListener="#{hallBean.update}" update="@form"
+                                           process="@this"/>
+                        </p:panelGrid>
+                    </f:facet>
+                    <p:column headerText="Номер стола">
+                        <h:outputText value="#{order.order.table.label}"/>
+                    </p:column>
+                    <p:column headerText="Официант">
+                        <h:outputText value="#{order.order.waiter.name}"/>
+                    </p:column>
+                    <p:column headerText="Время открытия стола">
+                        <h:outputText value="#{order.order.openTime}"/>
+                    </p:column>
+                    <p:column headerText="Заказ">
+                        <p:dataList value="#{order.order.grouppedItems()}" var="item">
+                            <h:outputText value="#{item.item.label} - #{item.count}шт"/>
+                        </p:dataList>
+                    </p:column>
+                    <p:column headerText="Итог">
+                        <h:outputText value="#{order.order.total()}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+
+</html>

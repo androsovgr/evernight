@@ -35,21 +35,22 @@ public abstract class CrudStatements<T extends Identifiable> {
     }
 
     public ListAndCount<T> lazyList(int offset, int selectCount, List<DbFilter<T>> filters) throws EvernightException {
+        log.debug("Started with offset={}, selectCount={}, filters={}", offset, selectCount, filters);
         try {
             CriteriaBuilder criteriaBuilder = em
                     .getCriteriaBuilder();
 
             CriteriaQuery<Long> countQuery = criteriaBuilder
                     .createQuery(Long.class);
-            countQuery.select(criteriaBuilder
-                    .count(countQuery.from(modelClass)));
+            Root<T> root = countQuery.from(modelClass);
+            countQuery.select(criteriaBuilder.count(root));
             List<Predicate> prs = new ArrayList<>();
             for (DbFilter<T> f : filters) {
                 if (f.enabled()) {
-                    prs.add(f.apply(criteriaBuilder, countQuery.from(modelClass)));
+                    prs.add(f.apply(criteriaBuilder, root));
                 }
             }
-            countQuery.where(prs.toArray(new Predicate[0]));
+            countQuery.where(prs.toArray(new Predicate[prs.size()]));
             long count = em.createQuery(countQuery)
                     .getSingleResult();
 
@@ -57,18 +58,14 @@ public abstract class CrudStatements<T extends Identifiable> {
                     .createQuery(modelClass);
             Root<T> from = criteriaQuery.from(modelClass);
             CriteriaQuery<T> select = criteriaQuery.select(from);
-            List<Predicate> prs2 = new ArrayList<>();
-            for (DbFilter<T> f : filters) {
-                if (f.enabled()) {
-                    prs.add(f.apply(criteriaBuilder, from));
-                }
-            }
-            countQuery.where(prs.toArray(new Predicate[0]));
+            select.where(prs.toArray(new Predicate[prs.size()]));
             TypedQuery<T> typedQuery = em.createQuery(select);
             typedQuery.setFirstResult(offset);
             typedQuery.setMaxResults(selectCount);
             List<T> resultList = typedQuery.getResultList();
-            return new ListAndCount<>(resultList, count);
+            ListAndCount<T> result = new ListAndCount<>(resultList, count);
+            log.debug("Got result: {}", result);
+            return result;
         } catch (PersistenceException e) {
             throw new EvernightException("Ошибка при обращении к БД", e);
         }

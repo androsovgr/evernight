@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
@@ -80,7 +81,7 @@ public class TotalsStatements {
     }
 
     @Data
-    public static class CategoryTotal {
+    public static class CategoryTotal implements Serializable {
         private String label;
         private long totalCount;
         private double totalPrice;

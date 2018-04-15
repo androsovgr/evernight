@@ -17,6 +17,7 @@ import javax.persistence.criteria.Root;
 import java.nio.charset.StandardCharsets;
 import java.security.spec.KeySpec;
 import java.util.Base64;
+import java.util.List;
 
 @Stateless
 public class UserStatements extends CrudStatements<User> {
@@ -67,14 +68,14 @@ public class UserStatements extends CrudStatements<User> {
         Root<User> ur = cq.from(User.class);
         cq.where(cb.and(cb.equal(cb.upper(ur.get(User_.email)), login.toUpperCase()), cb.equal(ur.get(User_.passwordHash), passwordHash)));
         TypedQuery<User> tq = em.createQuery(cq);
-        User founded = tq.getSingleResult();
-        if (founded == null) {
+        List<User> founded = tq.getResultList();
+        if (founded.size() == 0) {
             throw new EvernightException("Логин или пароль введен неправильно");
         }
-        if (founded.getStatus() == AccountStatus.LOCKED) {
+        if (founded.get(0).getStatus() == AccountStatus.LOCKED) {
             throw new EvernightException("Аккаунт заблокирован");
         }
-        return founded;
+        return founded.get(0);
     }
 
     private String passwordHash(String login, String password) throws EvernightException {

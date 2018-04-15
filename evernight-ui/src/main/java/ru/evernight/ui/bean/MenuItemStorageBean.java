@@ -22,11 +22,13 @@ public class MenuItemStorageBean {
         MenuItem hallMi = new MenuItem("Зал", "hall.jsf");
         MenuItem usersMi = new MenuItem("Пользователи", "users.jsf");
         MenuItem totalsMi = new MenuItem("Денежные итоги", "totals.jsf");
+        MenuItem ordersMi = new MenuItem("Заказы", "orders.jsf");
         List<MenuItem> waiterGrants = new ArrayList<>();
         waiterGrants.add(hallMi);
         ArrayList<MenuItem> managerGrants = new ArrayList<>(waiterGrants);
         managerGrants.add(usersMi);
         managerGrants.add(totalsMi);
+        managerGrants.add(ordersMi);
         ArrayList<MenuItem> adminGrants = new ArrayList<>(managerGrants);
         access.put(UserRole.WAITER, Collections.unmodifiableList(waiterGrants));
         access.put(UserRole.MANAGER, Collections.unmodifiableList(managerGrants));

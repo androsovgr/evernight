@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.evernight.dao.statement.filter.DateRangeFilter;
 import ru.evernight.dao.statement.filter.DbFilter;
+import ru.evernight.ui.func.SerializableFunction;
 
 import javax.persistence.criteria.Path;
 import java.util.Date;
-import java.util.function.Function;
 
 public class DateRangeUiFilter<T> implements UiFIlter {
     @Getter
@@ -18,15 +18,15 @@ public class DateRangeUiFilter<T> implements UiFIlter {
     private Date dateTo;
     private final Date defaultDateFrom;
     private final Date defaultDateTo;
-    private final Function<Path<T>, Path<Date>> path;
+    private final SerializableFunction<Path<T>, Path<Date>> path;
 
-    public DateRangeUiFilter(Date defaultDateFrom, Date defaultDateTo, Function<Path<T>, Path<Date>> path) {
+    public DateRangeUiFilter(Date defaultDateFrom, Date defaultDateTo, SerializableFunction<Path<T>, Path<Date>> path) {
         dateFrom = this.defaultDateFrom = defaultDateFrom;
         dateTo = this.defaultDateTo = defaultDateTo;
         this.path = path;
     }
 
-    public DateRangeUiFilter(Function<Path<T>, Path<Date>> path) {
+    public DateRangeUiFilter(SerializableFunction<Path<T>, Path<Date>> path) {
         this(null, null, path);
     }
 
