@@ -1,11 +1,14 @@
 package ru.evernight.model;
 
 import lombok.*;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @javax.persistence.Table(name = "ent_order")
@@ -31,7 +34,7 @@ public class Order implements Serializable, Identifiable {
     private Date closeTime;
     @Column(name = "ORD_COMMENT")
     private String comment;
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<OrderItem> items;
 
     public double total() {
@@ -41,4 +44,19 @@ public class Order implements Serializable, Identifiable {
         return items.stream().map(i -> i.getItem().getPrice()).reduce((d1, d2) -> d1 + d2).get();
     }
 
+    public List<GroupWithCount> grouppedItems() {
+        if (CollectionUtils.isEmpty(items)) {
+            return Collections.emptyList();
+        }
+        return items.stream().collect(Collectors.groupingBy(OrderItem::getItem, Collectors.counting()))
+                .entrySet().stream().map(e -> new GroupWithCount(e.getKey(), e.getValue().intValue()))
+                .collect(Collectors.toList());
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class GroupWithCount {
+        private Item item;
+        private int count;
+    }
 }
