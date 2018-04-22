@@ -36,7 +36,7 @@ public class TotalsStatements {
                     "group by i.ITEM_PK");
             List<Object[]> productTotalsObjects = q.setParameter(1, from).setParameter(2, to).getResultList();
             Map<Long, List<ProductTotal>> productTotals;
-            if (productTotalsObjects.get(0)[0] == null) {
+            if (productTotalsObjects.size() == 0 || productTotalsObjects.get(0)[0] == null) {
                 productTotals = new HashMap<>();
             } else {
                 productTotals = productTotalsObjects.stream().map(o -> new ProductTotal((String) o[0], ((BigInteger) o[1]).longValue(), ((BigInteger) o[2]).intValue(), ((BigDecimal) o[3]).doubleValue())).collect(Collectors.groupingBy(ProductTotal::getClassId));
