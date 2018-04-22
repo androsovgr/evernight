@@ -2,9 +2,11 @@ package ru.evernight.dao.statement;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.evernight.exception.EvernightException;
 import ru.evernight.model.Classifier;
+import ru.evernight.model.Consumption;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -40,10 +42,24 @@ public class TotalsStatements {
                 productTotals = productTotalsObjects.stream().map(o -> new ProductTotal((String) o[0], ((BigInteger) o[1]).longValue(), ((BigInteger) o[2]).intValue(), ((BigDecimal) o[3]).doubleValue())).collect(Collectors.groupingBy(ProductTotal::getClassId));
             }
             CategoryTotal result = convert(rootProductClassifier, productTotals);
+            addConsumptions(result, from, to);
             log.debug("Got totals: {}", result);
             return result;
         } catch (PersistenceException e) {
             throw new EvernightException("Ошибка взаимодействия с БД", e);
+        }
+    }
+
+    private void addConsumptions(CategoryTotal result, Date from, Date to) {
+        Query q = em.createNativeQuery("select c.cons_type, count(1), sum(c.cons_money) from ent_consumption c " +
+                "where c.cons_date>=?1 and c.cons_date<=?2 " +
+                "group by (cons_type) ");
+        List<Object[]> consumptionTotalsObjects = q.setParameter(1, from).setParameter(2, to).getResultList();
+        for (Object[] cto : consumptionTotalsObjects) {
+            Consumption.ConsumptionType type = Consumption.ConsumptionType.values()[((int) cto[0])];
+            CategoryTotal ct = new CategoryTotal(type.getLabel(), ((BigInteger) cto[1]).longValue(), -((BigDecimal) cto[2]).doubleValue(), Collections.emptyList());
+            result.getSubcategories().add(ct);
+            result.totalPrice += ct.totalPrice;
         }
     }
 
@@ -81,6 +97,8 @@ public class TotalsStatements {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class CategoryTotal implements Serializable {
         private String label;
         private long totalCount;
