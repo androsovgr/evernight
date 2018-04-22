@@ -9,10 +9,10 @@
 <h:body>
     <ui:composition template="/templates/mainTemplate.xhtml">
         <ui:define name="body">
-            <en:consumptionModify id="consumptionCreate" value="#{consumptionList.forCreate}" update=":userForm"
+            <en:consumptionModify id="consumptionCreate" value="#{consumptionList.forCreate}" update=":tableForm"
                                   headerText="Заведение расхода"
                                   widgetVar="consumptionCreate" buttonAction="#{consumptionList.create}"/>
-            <en:consumptionModify id="consumptionModify" value="#{consumptionList.forCreate}" update=":userForm"
+            <en:consumptionModify id="consumptionModify" value="#{consumptionList.forCreate}" update=":tableForm"
                                   headerText="Изменение расхода"
                                   widgetVar="consumptionModify" buttonAction="#{consumptionList.modify}"/>
             <h:form id="filterForm">

@@ -30,19 +30,18 @@ public class EvernightExceptionHandler extends FullAjaxExceptionHandler {
 
             // get the exception from context
             Throwable t = context.getException();
-
-            Throwable realCause = findExceptionRootCause(FacesContext.getCurrentInstance(), t);
-            if (realCause instanceof EvernightException) {
-                //here you do what ever you want with exception
-                try {
+            try {
+                Throwable realCause = findExceptionRootCause(FacesContext.getCurrentInstance(), t);
+                if (realCause instanceof EvernightException) {
+                    //here you do what ever you want with exception
                     FacesContext ctx = FacesContext.getCurrentInstance();
                     String detail = realCause.getCause() == null ? "" : realCause.getCause().getMessage();
                     ctx.addMessage(null, new FacesMessage(realCause.getMessage(), detail));
                     t.printStackTrace();
-                } finally {
-                    log.error("Got error", realCause);
                     i.remove();
                 }
+            } finally {
+                log.error("Got error", t);
             }
         }
         super.handle();

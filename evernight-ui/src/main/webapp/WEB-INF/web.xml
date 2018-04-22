@@ -24,8 +24,8 @@
     </servlet>
 
     <context-param>
-        <param-name>facelets.LIBRARIES</param-name>
-        <param-value>/WEB-INF/filter.taglib.xml</param-value>
+        <param-name>org.apache.myfaces.STRICT_JSF_2_ALLOW_SLASH_LIBRARY_NAME</param-name>
+        <param-value>true</param-value>
     </context-param>
 
     <!-- Faces Servlet Mapping -->

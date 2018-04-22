@@ -18,7 +18,7 @@
               resizable="false">
         <h:form id="dialogForm">
             <o:importConstants type="ru.evernight.model.Consumption$ConsumptionType" var="ct"/>
-            <p:panel rendered="#{cc.attrs.value!=null}">
+            <p:panel rendered="#{cc.attrs.value!=null}" id="mainPanel">
                 <p:panelGrid columns="2">
                     <p:outputLabel value="Назначение расхода"/>
                     <p:inputText value="#{cc.attrs.value.shortInfo}" required="true"/>
@@ -29,12 +29,12 @@
                     <p:outputLabel value="Величина"/>
                     <p:inputText value="#{cc.attrs.value.money}" required="true"/>
 
-                    <p:inputText value="Тип"/>
+                    <p:outputLabel value="Тип"/>
                     <p:selectOneMenu value="#{cc.attrs.value.type}" required="true">
                         <f:selectItems value="#{ct}" var="type" itemLabel="#{type.label}"/>
                     </p:selectOneMenu>
 
-                    <p:inputText value="Расширенное описание"/>
+                    <p:outputLabel value="Расширенное описание"/>
                     <p:inputTextarea value="#{cc.attrs.value.longInfo}" maxlength="1000"/>
                 </p:panelGrid>
             </p:panel>
