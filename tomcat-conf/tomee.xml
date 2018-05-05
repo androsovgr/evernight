@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tomee>
   <Resource id="jdbc/evernightDS" type="javax.sql.DataSource">
-  <![CDATA[
+    <![CDATA[
     jdbcUrl = jdbc:mysql://localhost:3306/evernight?autoReconnect=true&useSSL=false
     JdbcDriver  com.mysql.jdbc.Driver
     username = evernight
     password = evernight256
 	jtaManaged = true
-	maxActive = 30
+	maxActive = 20
 	maxIdle = 10
-	maxWait = 10000
+	minEvictableIdleTime=10s
+	timeBetweenEvictionRuns=10s
+	testWhileIdle=true
+	maxWait = 3000
 	defaultAutoCommit = false]]>
   </Resource>
 </tomee>
