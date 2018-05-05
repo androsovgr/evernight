@@ -2,11 +2,18 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:filter="http://evernight.ru/filter">
+      xmlns:filter="http://java.sun.com/jsf/composite/components/filter"
+      xmlns:en="http://java.sun.com/jsf/composite/components">
 
 <h:body>
     <ui:composition template="/templates/mainTemplate.xhtml">
         <ui:define name="body">
+            <en:orderModify id="orderCreate" update=":ordersForm" bean="#{ordersList.oeb}"
+                            buttonAction="#{ordersList.oeb.createOrder}"
+                            headerText="Создание заказа" widgetVar="createOrder" mode="manager"/>
+            <en:orderModify id="orderModify" update=":ordersForm" bean="#{ordersList.oeb}"
+                            buttonAction="#{ordersList.oeb.modifyOrder}"
+                            headerText="Изменение заказа" widgetVar="modifyOrder" mode="manager"/>
             <h:form id="filterForm">
                 <filter:dateRangeFilter filter="#{ordersList.orderClosedDateFilter}"/>
                 <p:commandButton value="Применить" process="@form" update=":ordersForm"/>
@@ -17,11 +24,18 @@
                 <p:dataTable value="#{ordersList}" var="order" paginator="true" rows="10"
                              paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                              rowsPerPageTemplate="5,10,15"
-                             id="carTable" lazy="true">
+                             id="carTable" lazy="true" selection="#{ordersList.selected}" selectionMode="single">
                     <f:facet name="header">
                         <p:panelGrid columns="4">
                             <p:commandLink value="Обновить" actionListener="#{hallBean.update}" update="@form"
                                            process="@this"/>
+                            <p:commandButton value="Создать заказ" actionListener="#{ordersList.oeb.prepareCreate}"
+                                             update=":orderCreate:dialogForm" oncomplete="PF('createOrder').show()"
+                                             process="@this"/>
+                            <p:commandButton value="Изменить заказ"
+                                             actionListener="#{ordersList.oeb.prepareModify(ordersList.selected.id)}"
+                                             update=":orderModify:dialogForm" oncomplete="PF('modifyOrder').show()"
+                                             process="@form"/>
                         </p:panelGrid>
                     </f:facet>
                     <p:column headerText="Номер стола">

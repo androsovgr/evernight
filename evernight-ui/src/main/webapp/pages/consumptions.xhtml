@@ -12,7 +12,7 @@
             <en:consumptionModify id="consumptionCreate" value="#{consumptionList.forCreate}" update=":tableForm"
                                   headerText="Заведение расхода"
                                   widgetVar="consumptionCreate" buttonAction="#{consumptionList.create}"/>
-            <en:consumptionModify id="consumptionModify" value="#{consumptionList.forCreate}" update=":tableForm"
+            <en:consumptionModify id="consumptionModify" value="#{consumptionList.selected}" update=":tableForm"
                                   headerText="Изменение расхода"
                                   widgetVar="consumptionModify" buttonAction="#{consumptionList.modify}"/>
             <h:form id="filterForm">

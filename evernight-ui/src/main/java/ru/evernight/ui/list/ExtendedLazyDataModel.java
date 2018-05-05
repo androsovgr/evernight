@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public abstract class ExtendedLazyDataModel<T extends Identifiable> extends LazyDataModel<T> {
@@ -25,6 +26,8 @@ public abstract class ExtendedLazyDataModel<T extends Identifiable> extends Lazy
     protected T selected;
     @Getter
     protected T forCreate;
+    @Setter
+    private Consumer<T> selectionCallback;
 
     @SuppressWarnings("unchecked")
     protected List<DbFilter<T>> filters() {
@@ -37,6 +40,12 @@ public abstract class ExtendedLazyDataModel<T extends Identifiable> extends Lazy
         return (List<DbFilter<T>>) (List) l;
     }
 
+    private void callback(T newSelected) {
+        if (selectionCallback != null) {
+            selectionCallback.accept(newSelected);
+        }
+    }
+
 
     @SneakyThrows(EvernightException.class)
     @Override
@@ -45,6 +54,7 @@ public abstract class ExtendedLazyDataModel<T extends Identifiable> extends Lazy
         setRowCount((int) result.getTotalCount());
         if (!result.getElements().contains(selected) && !result.getElements().isEmpty()) {
             selected = result.getElements().get(0);
+            callback(selected);
         }
         return result.getElements();
     }
@@ -84,6 +94,8 @@ public abstract class ExtendedLazyDataModel<T extends Identifiable> extends Lazy
     @SneakyThrows(EvernightException.class)
     @Override
     public T getRowData(String rowKey) {
-        return getMainStatements().byId(Long.parseLong(rowKey));
+        T result = getMainStatements().byId(Long.parseLong(rowKey));
+        callback(result);
+        return result;
     }
 }

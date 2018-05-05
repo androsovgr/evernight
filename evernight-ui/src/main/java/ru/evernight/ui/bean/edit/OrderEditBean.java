@@ -29,6 +29,7 @@ public class OrderEditBean implements Serializable {
     @Getter
     private List<Item> availableItems;
     @Getter
+    @Setter
     private Order order;
     @Getter
     @Setter
@@ -42,17 +43,31 @@ public class OrderEditBean implements Serializable {
     private OrderStatements os;
     @Inject
     private LoginBean lb;
+    @Getter
+    @Setter
+    private boolean managerMode = false;
 
     public void prepareCreate() throws EvernightException {
-        freeTables = ts.freeTables();
+        if (managerMode) {
+            freeTables = ts.list();
+        } else {
+            freeTables = ts.freeTables();
+        }
         availableItems = is.activeItems();
         order = Order.builder().openTime(new Date()).table(freeTables.isEmpty() ? null : freeTables.get(0)).waiter(lb.getUser()).items(new ArrayList<>()).build();
+        if (managerMode){
+            order.setCloseTime(new Date());
+        }
     }
 
     public void prepareModify(long id) throws EvernightException {
         order = os.byIdInitItems(id);
-        freeTables = ts.freeTables();
-        freeTables.add(order.getTable());
+        if (managerMode) {
+            freeTables = ts.list();
+        } else {
+            freeTables = ts.freeTables();
+            freeTables.add(order.getTable());
+        }
         availableItems = is.activeItems();
     }
 
@@ -76,13 +91,17 @@ public class OrderEditBean implements Serializable {
     }
 
     public void createOrder() throws EvernightException {
-        order.setOpenTime(normalize(order.getOpenTime()));
+        if (!managerMode) {
+            order.setOpenTime(normalize(order.getOpenTime()));
+        }
         os.create(order);
     }
 
     public void modifyOrder() throws EvernightException {
-        order.setOpenTime(normalize(order.getOpenTime()));
-        order.setCloseTime(normalize(order.getCloseTime()));
+        if (!managerMode) {
+            order.setOpenTime(normalize(order.getOpenTime()));
+            order.setCloseTime(normalize(order.getCloseTime()));
+        }
         os.update(order);
     }
 

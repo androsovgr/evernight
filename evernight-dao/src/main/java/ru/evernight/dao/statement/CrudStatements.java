@@ -68,6 +68,34 @@ public abstract class CrudStatements<T extends Identifiable> {
         }
     }
 
+    public List<T> list() throws EvernightException {
+        return list(new ArrayList<>());
+    }
+    public List<T> list(List<DbFilter<T>> filters) throws EvernightException {
+        log.debug("Started with filters={}", filters);
+        try {
+            CriteriaBuilder criteriaBuilder = em
+                    .getCriteriaBuilder();
+            CriteriaQuery<T> criteriaQuery = criteriaBuilder
+                    .createQuery(modelClass);
+            Root<T> root = criteriaQuery.from(modelClass);
+            List<Predicate> prs = new ArrayList<>();
+            for (DbFilter<T> f : filters) {
+                if (f.enabled()) {
+                    prs.add(f.apply(criteriaBuilder, root));
+                }
+            }
+            CriteriaQuery<T> select = criteriaQuery.select(root);
+            select.where(prs.toArray(new Predicate[prs.size()]));
+            TypedQuery<T> typedQuery = em.createQuery(select);
+            List<T> resultList = typedQuery.getResultList();
+            log.debug("Got result: {}", resultList);
+            return resultList;
+        } catch (PersistenceException e) {
+            throw new EvernightException("Ошибка при обращении к БД", e);
+        }
+    }
+
     public T byId(long id) throws EvernightException {
         try {
             return em.find(modelClass, id);

@@ -22,7 +22,7 @@
                 <p:panelGrid columns="2" id="mainPanel">
                     <p:outputLabel value="Номер стола"/>
                     <p:selectOneMenu value="#{cc.attrs.bean.order.table}" required="true"
-                                     disabled="#{cc.attrs.mode!='modify'}">
+                                     disabled="#{cc.attrs.mode!='modify' and cc.attrs.mode!='manager'}">
                         <f:selectItem itemLabel="Выберите стол" noSelectionOption="true"/>
                         <f:selectItems value="#{cc.attrs.bean.freeTables}" var="tbl" itemLabel="#{tbl.label}"
                                        itemValue="#{tbl}"/>
@@ -33,17 +33,22 @@
 
                     <p:outputLabel value="Время открытия:"/>
                     <p:calendar value="#{cc.attrs.bean.order.openTime}" timeOnly="true" required="true"
-                                pattern="HH:mm" disabled="#{cc.attrs.mode!='modify'}"
+                                pattern="HH:mm" disabled="#{cc.attrs.mode!='modify'}" rendered="#{cc.attrs.mode!='manager'}"
+                                showOn="button"/>
+                    <p:calendar value="#{cc.attrs.bean.order.openTime}" required="true"
+                                pattern="dd/MM/YY HH:mm" rendered="#{cc.attrs.mode=='manager'}"
                                 showOn="button"/>
 
-                    <p:outputLabel value="Время закрытия:" rendered="#{cc.attrs.mode=='close'}"/>
+                    <p:outputLabel value="Время закрытия:" rendered="#{cc.attrs.mode=='close' or cc.attrs.mode=='manager'}"/>
                     <p:calendar value="#{cc.attrs.bean.order.closeTime}" timeOnly="true" required="true"
-                                pattern="HH:mm" rendered="#{cc.attrs.mode=='close'}" showOn="button"/>
+                                pattern="HH:mm" rendered="#{cc.attrs.mode=='close'}" showOn="button" />
+                    <p:calendar value="#{cc.attrs.bean.order.closeTime}" required="true"
+                                pattern="dd/MM/YY HH:mm" rendered="#{cc.attrs.mode=='manager'}" showOn="button" />
 
                     <p:outputLabel value="Комментарий"/>
                     <p:inputTextarea value="#{cc.attrs.bean.order.comment}"/>
                 </p:panelGrid>
-                <p:panel header="Добавить в заказ" rendered="#{cc.attrs.mode=='modify'}">
+                <p:panel header="Добавить в заказ" rendered="#{cc.attrs.mode=='modify' or cc.attrs.mode=='manager'}">
                     <p:autoComplete value="#{cc.attrs.bean.selectedItem}" dropdown="true"
                                     completeMethod="#{cc.attrs.bean.findItems}" var="itm" itemLabel="#{itm.label}"
                                     itemValue="#{itm}"
