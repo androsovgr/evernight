@@ -2,6 +2,7 @@ package ru.evernight.dao.statement;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ru.evernight.dao.Order;
 import ru.evernight.dao.statement.filter.DbFilter;
 import ru.evernight.exception.EvernightException;
 import ru.evernight.model.Identifiable;
@@ -10,12 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("EjbInterceptorInspection")
@@ -27,11 +24,7 @@ public abstract class CrudStatements<T extends Identifiable> {
     @PersistenceContext(unitName = "evernight")
     protected EntityManager em;
 
-    public ListAndCount<T> lazyList(int offset, int selectCount) throws EvernightException {
-        return lazyList(offset, selectCount, Collections.emptyList());
-    }
-
-    public ListAndCount<T> lazyList(int offset, int selectCount, List<DbFilter<T>> filters) throws EvernightException {
+    public ListAndCount<T> lazyList(int offset, int selectCount, List<DbFilter<T>> filters, Order<T> order) throws EvernightException {
         log.debug("Started with offset={}, selectCount={}, filters={}", offset, selectCount, filters);
         try {
             CriteriaBuilder criteriaBuilder = em
@@ -56,6 +49,10 @@ public abstract class CrudStatements<T extends Identifiable> {
             Root<T> from = criteriaQuery.from(modelClass);
             CriteriaQuery<T> select = criteriaQuery.select(from);
             select.where(prs.toArray(new Predicate[prs.size()]));
+            if (order != null) {
+                Path<?> orderPath = order.getPath().apply(root);
+                select.orderBy(order.isAsc() ? criteriaBuilder.asc(orderPath) : criteriaBuilder.desc(orderPath));
+            }
             TypedQuery<T> typedQuery = em.createQuery(select);
             typedQuery.setFirstResult(offset);
             typedQuery.setMaxResults(selectCount);
@@ -71,6 +68,7 @@ public abstract class CrudStatements<T extends Identifiable> {
     public List<T> list() throws EvernightException {
         return list(new ArrayList<>());
     }
+
     public List<T> list(List<DbFilter<T>> filters) throws EvernightException {
         log.debug("Started with filters={}", filters);
         try {

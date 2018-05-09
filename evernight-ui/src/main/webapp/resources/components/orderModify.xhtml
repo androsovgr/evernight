@@ -36,14 +36,14 @@
                                 pattern="HH:mm" disabled="#{cc.attrs.mode!='modify'}" rendered="#{cc.attrs.mode!='manager'}"
                                 showOn="button"/>
                     <p:calendar value="#{cc.attrs.bean.order.openTime}" required="true"
-                                pattern="dd/MM/YY HH:mm" rendered="#{cc.attrs.mode=='manager'}"
+                                pattern="dd/MM/yy HH:mm" rendered="#{cc.attrs.mode=='manager'}"
                                 showOn="button"/>
 
                     <p:outputLabel value="Время закрытия:" rendered="#{cc.attrs.mode=='close' or cc.attrs.mode=='manager'}"/>
                     <p:calendar value="#{cc.attrs.bean.order.closeTime}" timeOnly="true" required="true"
                                 pattern="HH:mm" rendered="#{cc.attrs.mode=='close'}" showOn="button" />
                     <p:calendar value="#{cc.attrs.bean.order.closeTime}" required="true"
-                                pattern="dd/MM/YY HH:mm" rendered="#{cc.attrs.mode=='manager'}" showOn="button" />
+                                pattern="dd/MM/yy HH:mm" rendered="#{cc.attrs.mode=='manager'}" showOn="button" />
 
                     <p:outputLabel value="Комментарий"/>
                     <p:inputTextarea value="#{cc.attrs.bean.order.comment}"/>

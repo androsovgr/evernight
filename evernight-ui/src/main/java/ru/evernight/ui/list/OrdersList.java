@@ -3,6 +3,7 @@ package ru.evernight.ui.list;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import ru.evernight.dao.Order;
 import ru.evernight.dao.statement.aggregated.AggregatedOrderStatements;
 import ru.evernight.model.Order_;
 import ru.evernight.model.aggregative.AggregatedOrder;
@@ -33,5 +34,10 @@ public class OrdersList extends ExtendedLazyDataModel<AggregatedOrder> {
     private void postConstruct() {
         oeb.setManagerMode(true);
         setSelectionCallback(ao -> oeb.setOrder(ao.getOrder()));
+    }
+
+    @Override
+    protected Order<AggregatedOrder> order() {
+        return new Order<>(r -> r.get(AggregatedOrder_.order).get(Order_.closeTime), false);
     }
 }

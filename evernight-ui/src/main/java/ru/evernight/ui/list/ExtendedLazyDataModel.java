@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
+import ru.evernight.dao.Order;
 import ru.evernight.dao.statement.CrudStatements;
 import ru.evernight.dao.statement.ListAndCount;
 import ru.evernight.dao.statement.filter.DbFilter;
@@ -50,7 +51,7 @@ public abstract class ExtendedLazyDataModel<T extends Identifiable> extends Lazy
     @SneakyThrows(EvernightException.class)
     @Override
     public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map filters) {
-        ListAndCount<T> result = getMainStatements().lazyList(first, pageSize, filters());
+        ListAndCount<T> result = getMainStatements().lazyList(first, pageSize, filters(),order());
         setRowCount((int) result.getTotalCount());
         if (!result.getElements().contains(selected) && !result.getElements().isEmpty()) {
             selected = result.getElements().get(0);
@@ -97,5 +98,9 @@ public abstract class ExtendedLazyDataModel<T extends Identifiable> extends Lazy
         T result = getMainStatements().byId(Long.parseLong(rowKey));
         callback(result);
         return result;
+    }
+
+    protected Order<T> order(){
+        return null;
     }
 }

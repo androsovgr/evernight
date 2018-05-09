@@ -20,10 +20,10 @@ public class DateRangeFilter<T> implements DbFilter<T> {
     public Predicate apply(CriteriaBuilder cb, Path<T> rootPath) {
         List<Predicate> prs = new ArrayList<>();
         if (from != null) {
-            prs.add(cb.greaterThan(path.apply(rootPath), from));
+            prs.add(cb.greaterThanOrEqualTo(path.apply(rootPath), from));
         }
         if (to != null) {
-            prs.add(cb.lessThan(path.apply(rootPath), to));
+            prs.add(cb.lessThanOrEqualTo(path.apply(rootPath), to));
         }
         return cb.and(prs.toArray(new Predicate[2]));
     }
