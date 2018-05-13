@@ -15,6 +15,9 @@
         <param-value>0</param-value>
     </context-param>
 
+    <session-config>
+        <session-timeout>720</session-timeout>
+    </session-config>
 
     <!-- Faces Servlet -->
     <servlet>
